@@ -10,5 +10,6 @@
 </template>
 
 <style lang="scss">
-@import './App.scss'
+@import './App.scss';
+@import "vue-select/src/scss/vue-select.scss";
 </style>

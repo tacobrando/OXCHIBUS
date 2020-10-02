@@ -115,6 +115,8 @@ export default {
 }
 .card-container{
     display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
     padding: 20px
 }
 .card{
@@ -127,6 +129,17 @@ export default {
 
     &:hover{
         background: rgb(221, 221, 221)
+    }
+}
+@media only screen and(max-width: 900px) {
+    .team-info{
+        width: 100%;
+    }
+}
+@media only screen and(max-width: 600px) {
+    .card-container{
+        display: flex;
+        
     }
 }
 </style>

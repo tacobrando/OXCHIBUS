@@ -8,49 +8,124 @@
         it will appear on the map.
       </p>
     </div>
-      <form @submit.prevent="addBusiness" >
+      <form method="post" @submit.prevent="addBusiness">
         <div class="container">
           <div class="input">
             <p>Name</p>
-            <input type="text">
+            <input v-model="state.name"  type="text" id="name">
           </div>
           <div class="input">
             <p>Email</p>
-            <input type="email">
+            <input v-model="state.email"  type="email" id="email">
           </div>
         </div>
         <div class="container">
           <div class="input">
             <p>Name of Business</p>
-            <input type="text">
+            <input v-model="state.business_name"  id="business_name" type="text">
           </div>
           <div class="input">
             <p>Owner</p>
-            <input type="text">
+            <input v-model="state.owner" id="owner"  type="text">
           </div>
         </div>
-        <div class="container">
-          <div class="input">
-            <select v-model="state.selected" id="selectBtn">
-              <option value="1">1</option>
-            </select>
+        <div class="container-select">
+          <div class="select">
+            <div class="option">
+              <p>Year of opening</p>
+              <select v-model="state.open_year"  id="open_year">
+                <option v-for="year in years" :key="year" value="year">
+                  {{year}}
+                </option>
+              </select>
+            </div>
+            <div class="option">
+              <p>Year of closing(optional)</p>
+              <select v-model="state.close_year" id="open_year">
+                <option v-for="year in years" :key="year" value="year">
+                  {{year}}
+                </option>
+              </select>
+            </div>
           </div>
         </div>
+        <div class="google-maps">
+          <p>Location:</p>
+          <AutoComplete  @set-marker="setInfo" />
+          <GoogleMaps :showInput="true" :data="state.data" />
+        </div>
+        <button>SUBMIT</button>
       </form>
+      <Confirmation :loaded="state.loaded" :showModal="state.confirmed" />
   </div>
 </template>
 
 <script>
-import { reactive } from '@vue/composition-api'
+import { computed, reactive } from '@vue/composition-api'
+import GoogleMaps from './GoogleMaps/GoogleMaps'
+import AutoComplete from './GoogleMaps/AutoComplete'
+import Confirmation from './Confirmation'
+
+// import db from '@/utils/firebase'
 
 export default {
-  setup() {
+  components: { GoogleMaps, AutoComplete, Confirmation },
+  setup(props, ctx) {
     const state = reactive({
-      selected: ''
+      data: [],
+      selected: '',
+      name: '',
+      email: '',
+      business_name: '',
+      owner: '',
+      address: '',
+      lat: 0,
+      lng: 0,
+      open_year: 0,
+      close_year: 0,
+      confirmed: false,
+      loaded: false,
     })
 
+    const years = computed(() => {
+      return Array.from({length: 1981 - 1910}, (value, index) => 1910 + index)
+    })
+
+    function setInfo(data) {
+      state.data = []
+      state.address = data.address
+      state.lat = data.lat
+      state.lng = data.lng
+      state.data.push({ position: data })
+    }
+
+    function addBusiness() {
+      // let details = {
+      //   name: state.name,
+      //   email: state.email,
+      //   business_name: state.business_name,
+      //   owner: state.owner,
+      //   open_year: state.open_year,
+      //   close_year: state.close_year,
+      //   lat: state.lat,
+      //   lng:state.lng,
+      //   address: state.address
+      // }
+      // db.collection('unverified').add(details)
+      // .then(() => {
+        console.log("Sent")
+        state.confirmed = !state.confirmed
+        ctx.emit('show-modal', state.confirmed)
+    //   }).catch((err) => {
+    //     console.log(err)
+    //   })
+    }
+
     return {
-      state
+      state,
+      years,
+      setInfo,
+      addBusiness,
     }
   }
 }
@@ -68,6 +143,66 @@ form {
   display: flex;
   justify-content: center;
   flex-direction: column;
+  align-items: center;
+
+  #email:invalid {
+    background-color: #ffdddd;
+  }
+  button{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 37px;
+    width: 40%;
+    height: 37px;
+    border: 1px solid #dcdfe6;
+    color: #606266;
+    background-color: white;
+    transition: 0.3s;
+
+    &:hover{
+      background: rgb(221, 221, 221)
+    }
+  }
+
+  .google-maps{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    width: 688px;
+    height: 600px;
+
+    p{
+      margin: 0;
+    }
+  }
+
+  .container-select{
+    display: flex;
+    flex-direction: column;
+
+    p{
+      margin: 20px 0px 0px 0px
+    }
+
+    .select{
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      select{
+        width: 272px;
+        height: 37px;
+        border: 1px solid rgba(0, 0, 0, 0.2);
+        border-radius: 5px;
+        text-align: center;
+        font-size: 0.8rem;
+        margin: 20px;
+
+      }
+    }
+
+  }
   .container{
     display: flex;
     justify-content: center;
@@ -101,5 +236,43 @@ form {
 
 }
 
+@media only screen and (max-width: 800px) {
+  form{
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+
+    .google-maps{
+      width: 100%;
+      height: 600px;
+    }
+  }
+}
+
+
+@media only screen and (max-width: 645px) {
+  form{
+    display: flex;
+    flex-direction: column;
+
+    .container{
+      display: flex;
+      flex-direction: column;
+
+      input{
+        width: 80%;
+      }
+    }
+    .container-select{
+      display: flex;
+      flex-direction: column;
+      .select{
+        display: flex;
+        flex-direction: column;
+        
+      }
+    }
+  }
+}
 
 </style>
