@@ -1,9 +1,9 @@
 <template>
   <div class="marker">
     <GmapMarker
-        :key="index"
-        v-for="(m, index) in mapData"
-        :position="m.position"
+        @click="showInfo"
+        v-if="data"
+        :position="data.position"
         :clickable="true"
         :draggable="false"
     >
@@ -14,10 +14,19 @@
 <script>
 export default {
     props: {
-        mapData: {
-            type: Array,
+        data: {
+            type: Object,
             required: true
-        }
+        },
+    },
+    setup(props) {
+      function showInfo() {
+        console.log(props.data.position)
+      }
+
+      return {
+        showInfo
+      }
     }
 }
 </script>

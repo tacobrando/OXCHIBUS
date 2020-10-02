@@ -8,37 +8,44 @@
       class="google-maps"
       map-type-id="terrain"
     >
-      <MapMarker v-if="showCoord" :mapData="state.mapData" />
+      <MapMarker v-for="(pos, index) in data" :data="pos" :key="index" />
+      <MapMarker v-if="state.showMark" :data="state.position" />
     </GmapMap>
   </div>
 </template>
 
 <script>
-import db from '@/utils/firebase'
-import { reactive, onMounted } from '@vue/composition-api'
+import { reactive } from '@vue/composition-api'
 import mapStyles from './mapStyles.js'
 import MapMarker from './MapMarker'
 
 export default {
   name: 'GoogleMaps',
   components: {
-    MapMarker
+    MapMarker,
   },
   props: {
-    showCoord:{
+    data:{
+      type: Array,
+      required: false
+    },
+    showInput:{
       type: Boolean,
       required: true
     }
   },
+   
   setup() {
     const state = reactive({
       OXFORD: { lat: 51.752022, lng: -1.257677 },
       mapData: [],
+      position: null,
+      showMark: false,
       mapStyle: {
           streetViewControl: false,
           rotateControl: false,
           mapTypeControl: false,
-          minZoom: 9,
+          minZoom: 10,
           restriction: {
             latLngBounds: {
                 north: 51.83,
@@ -52,15 +59,6 @@ export default {
       }
     })
 
-    onMounted(() => {
-      db.collection('businesses').get().then(item => {
-        item.forEach(doc => {
-          let data = doc.data()
-          state.mapData.push({ position: data })
-        })
-      })
-    })
-
     return {
       state
     }
@@ -71,7 +69,7 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 .map{
-  width: 50%;
+  width: 100%;
   height: 100%;
 }
 .google-maps{
