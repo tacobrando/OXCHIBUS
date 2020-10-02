@@ -1,0 +1,143 @@
+#app {
+    font-family: 'Open Sans', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-align: center;
+    color: #2c3e50;
+  }
+  .fade-in {
+      opacity: 1;
+      animation-name: fadeInOpacity;
+      animation-iteration-count: 1;
+      animation-timing-function: ease-in;
+      animation-duration: 0.2s;
+  }
+  @-webkit-keyframes slideIn {
+    0% {
+      transform: translateX(-900px);
+    }
+    100% {
+      transform: translateX(0);
+    }
+  }
+  @-moz-keyframes slideIn {
+    0% {
+      transform: translateX(-900px);
+    }
+    100% {
+      transform: translateX(0);
+    }
+  }
+  @keyframes slideIn {
+    0% {
+      transform: translateX(-900px);
+    }
+    100% {
+      transform: translateX(0);
+    }
+  }
+  @keyframes fadeInOpacity {
+      0% {
+          opacity: 0;
+      }
+      100% {
+          opacity: 1;
+      }
+  }
+  @-webkit-keyframes slideInRight {
+    0% {
+      transform: translateX(900px);
+    }
+    100% {
+      transform: translateX(0);
+    }
+  }
+  @-moz-keyframes slideInRight {
+    0% {
+      transform: translateX(900px);
+    }
+    100% {
+      transform: translateX(0);
+    }
+  }
+  @keyframes slideInRight {
+    0% {
+      transform: translateX(900px);
+    }
+    100% {
+      transform: translateX(0);
+    }
+  }
+  
+  @-webkit-keyframes slideInDown {
+    0% {
+      transform: translateY(-900px);
+    }
+    100% {
+      transform: translateY(0);
+    }
+  }
+  @-moz-keyframes slideInDown {
+    0% {
+      transform: translateY(-900px);
+    }
+    100% {
+      transform: translateX(0);
+    }
+  }
+  @keyframes slideInDown {
+    0% {
+      transform: translateY(-900px);
+    }
+    100% {
+      transform: translateY(0);
+    }
+  }
+  .slide-in-down {
+    -webkit-animation: slideInDown 2s forwards;
+    -moz-animation: slideInDown 2s forwards;
+    animation: slideInDown 2s forwards;
+  }
+  
+  .slide-in-right {
+    -webkit-animation: slideInRight 2s forwards;
+    -moz-animation: slideInRight 2s forwards;
+    animation: slideInRight 2s forwards;
+  }
+  
+  .slide-in {
+    -webkit-animation: slideIn 2s forwards;
+    -moz-animation: slideIn 2s forwards;
+    animation: slideIn 2s forwards;
+  }
+  #nav {
+    padding: 30px;
+  }
+  
+  #nav a {
+    font-weight: bold;
+    color: #2c3e50;
+  }
+  
+  #nav a.router-link-exact-active {
+    color: #42b983;
+  }
+  html, body{
+    margin: 0;
+    padding: 0;
+  }
+  #title{
+      margin-top: 20px;
+  }
+  #title h1 {
+    font-size: 3.5rem;
+    line-height: 1;
+    padding: 10px;
+    margin: 0;
+    font-weight: 100;
+  }
+  #title h3 {
+    font-size: 1.5rem;
+    font-weight: 100;
+  }
+  
