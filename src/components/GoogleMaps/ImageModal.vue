@@ -1,29 +1,11 @@
 <template>
    <transition name="modal">
-        <div class="modal-mask ">
+        <div @click="toggleModal" class="modal-mask ">
           <div class="modal-wrapper">
             <div class="modal-container animate-top">
-              <div class="modal-header fade-in">
-                <slot name="header">
-                  <h1>{{name}}</h1>
-                </slot>
-              </div>
+                <slot>
 
-              <div class="modal-body fade-in">
-                <slot name="body">
-                  <img v-if="name == 'Matthew Lee'" src="@/assets/Members/Matthew Lee.jpg">
-                  <img v-if="name == 'Cecilia Young'" src="@/assets/Members/Cecilia Young.jpg">
-                  <img v-if="name == 'Maria Mak'" src="@/assets/Members/Maria Mak.jpg">
-                  <img v-if="name == 'Winnie Sung'" src="@/assets/Members/Winnie Sung.jpg">
-                  <img v-if="name == 'Michal Bosworth'" src="@/assets/Members/Michal Bosworth.jpg">
                 </slot>
-              </div>
-
-              <div class="modal-footer">
-                <slot name="footer">
-                  <h3>{{role}}</h3>
-                </slot>
-              </div>
             </div>
           </div>
         </div>
@@ -31,43 +13,19 @@
 </template>
 
 <script>
-import { reactive, computed } from '@vue/composition-api'
+// import { reactive, computed } from '@vue/composition-api'
 export default {
     props: {
-        name: {
-            type: String,
-            required: true
-        },
-        role: {
-            type: String,
-            required: true
-        },
-        url: {
-            type: String,
-            required: true
-        }
+
     },
     name: "Modal",
     setup(props, ctx) {
-        const state = reactive({
-            showModal: false,
-            imageUrl: computed(() => imageUrlParse)
-        })
-        function modalOpen() {
-            ctx.emit('showModal', props.name)
-            state.showModal = !state.showModal
-        }
-
-        function imageUrlParse() {
-            if (props.name == "Matthew Lee") {
-                console.log(props.name)
-                return require(`@/assets/Members/${props.name}.jpg`)
-            }
+        function toggleModal() {
+            ctx.emit('toggle')
         }
 
         return {
-            state,
-            modalOpen,
+            toggleModal
         }
     }
 

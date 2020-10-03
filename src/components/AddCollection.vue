@@ -8,41 +8,79 @@
         it will appear on the map.
       </p>
     </div>
-      <form method="post" @submit.prevent="addBusiness">
+      <form 
+        method="post" 
+        @submit.prevent="addBusiness"
+      >
         <div class="container">
           <div class="input">
             <p>Name</p>
-            <input v-model="state.name"  type="text" id="name">
+            <input 
+              v-model="state.name" 
+              required 
+              type="text" 
+              id="name"
+            >
           </div>
           <div class="input">
             <p>Email</p>
-            <input v-model="state.email"  type="email" id="email">
+            <input 
+              v-model="state.email" 
+              required 
+              type="email" 
+              id="email"
+            >
           </div>
         </div>
         <div class="container">
           <div class="input">
             <p>Name of Business</p>
-            <input v-model="state.business_name"  id="business_name" type="text">
+            <input 
+              v-model="state.business_name" 
+              required 
+              id="business_name" 
+              type="text"
+            >
           </div>
           <div class="input">
             <p>Owner</p>
-            <input v-model="state.owner" id="owner"  type="text">
+            <input 
+              v-model="state.owner" 
+              id="owner" 
+              required 
+              type="text"
+            >
           </div>
         </div>
         <div class="container-select">
           <div class="select">
             <div class="option">
               <p>Year of opening</p>
-              <select v-model="state.open_year"  id="open_year">
-                <option v-for="year in years" :key="year" value="year">
+              <select 
+                v-model="state.open_year" 
+                required 
+                id="open_year"
+              >
+                <option 
+                  v-for="year in years" 
+                  :key="year" 
+                  value="year"
+                >
                   {{year}}
                 </option>
               </select>
             </div>
             <div class="option">
               <p>Year of closing(optional)</p>
-              <select v-model="state.close_year" id="open_year">
-                <option v-for="year in years" :key="year" value="year">
+              <select 
+                v-model="state.close_year" 
+                id="open_year"
+              >
+                <option 
+                  v-for="year in years" 
+                  :key="year" 
+                  value="year"
+                >
                   {{year}}
                 </option>
               </select>
@@ -51,12 +89,24 @@
         </div>
         <div class="google-maps">
           <p>Location:</p>
-          <AutoComplete  @set-marker="setInfo" />
-          <GoogleMaps :showInput="true" :data="state.data" />
+          <AutoComplete 
+            required 
+            @set-marker="setInfo" 
+          />
+          <GoogleMaps 
+            :showInput="true" 
+            :data="state.data" 
+          />
         </div>
         <button>SUBMIT</button>
       </form>
-      <Confirmation :loaded="state.loaded" :showModal="state.confirmed" />
+      <Confirmation 
+        @close-modal="closeModal"
+        v-if="state.confirmed" 
+        :loaded="state.loaded" 
+        :message="state.message"
+        :showModal="state.confirmed" 
+      />
   </div>
 </template>
 
@@ -66,12 +116,13 @@ import GoogleMaps from './GoogleMaps/GoogleMaps'
 import AutoComplete from './GoogleMaps/AutoComplete'
 import Confirmation from './Confirmation'
 
-// import db from '@/utils/firebase'
+import db from '@/utils/firebase'
 
 export default {
   components: { GoogleMaps, AutoComplete, Confirmation },
-  setup(props, ctx) {
+  setup() {
     const state = reactive({
+      message: '',
       data: [],
       selected: '',
       name: '',
@@ -85,11 +136,19 @@ export default {
       close_year: 0,
       confirmed: false,
       loaded: false,
+      infoWindowPos: null,
+      infoWinOpen: false,
+      currentMidx: null,
     })
 
     const years = computed(() => {
       return Array.from({length: 1981 - 1910}, (value, index) => 1910 + index)
     })
+
+    function closeModal() {
+      state.confirmed = !state.confirmed
+      location.reload()
+    }
 
     function setInfo(data) {
       state.data = []
@@ -100,25 +159,29 @@ export default {
     }
 
     function addBusiness() {
-      // let details = {
-      //   name: state.name,
-      //   email: state.email,
-      //   business_name: state.business_name,
-      //   owner: state.owner,
-      //   open_year: state.open_year,
-      //   close_year: state.close_year,
-      //   lat: state.lat,
-      //   lng:state.lng,
-      //   address: state.address
-      // }
-      // db.collection('unverified').add(details)
-      // .then(() => {
+      let details = {
+        name: state.name,
+        email: state.email,
+        business_name: state.business_name,
+        owner: state.owner,
+        open_year: state.open_year,
+        close_year: state.close_year,
+        lat: state.lat,
+        lng:state.lng,
+        address: state.address
+      }
+      db.collection('unverified').add(details)
+      .then(() => {
         console.log("Sent")
+        state.message = "Email has been Sent"
         state.confirmed = !state.confirmed
-        ctx.emit('show-modal', state.confirmed)
-    //   }).catch((err) => {
-    //     console.log(err)
-    //   })
+        setTimeout(() => {
+          state.loaded = !state.loaded
+        }, 2000)
+      }).catch((err) => {
+        console.log(err)
+        state.message = "Error, Please try again"
+      })
     }
 
     return {
@@ -126,6 +189,7 @@ export default {
       years,
       setInfo,
       addBusiness,
+      closeModal
     }
   }
 }
@@ -154,6 +218,7 @@ form {
     align-items: center;
     margin-top: 37px;
     width: 40%;
+    border-radius: 5px;
     height: 37px;
     border: 1px solid #dcdfe6;
     color: #606266;
