@@ -1,3 +1,4 @@
+
 #app {
     font-family: 'Open Sans', sans-serif;
     -webkit-font-smoothing: antialiased;
@@ -5,6 +6,10 @@
     text-align: center;
     color: #2c3e50;
   }
+  .gm-ui-hover-effect{
+    display: none !important;
+  }
+
   .fade-in {
       opacity: 1;
       animation-name: fadeInOpacity;
@@ -140,4 +145,5 @@
     font-size: 1.5rem;
     font-weight: 100;
   }
+  
   

@@ -66,7 +66,7 @@ export default {
 .pageOne{
   display: flex;
   width: 100%;
-  height: 100vh
+  height: 100%
 }
 .pageTwo{
   display: flex;
@@ -91,6 +91,7 @@ h1{
   font-weight: 200;
 }
 .map{
+  height: 100vh;
   width: 50%;
 }
 

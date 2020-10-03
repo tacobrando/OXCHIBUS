@@ -1,16 +1,16 @@
 <template>
-   <transition v-if="state.modal" name="modal">
+   <transition name="modal">
         <div class="modal-mask ">
           <div class="modal-wrapper">
             <div class="modal-container animate-top">
-              <div v-if="state.loader" class="loader"></div>
-              <div v-if="!state.loader" class="modal-body fade-in">
+              <div v-if="!state.loader" class="loader"></div>
+              <div v-if="state.loader" class="modal-body fade-in">
                 <slot name="body">
-                    <h3>Email has been Sent</h3>
+                    <h3>{{message}}</h3>
                 </slot>
               </div>
 
-              <div v-if="!state.loader" class="modal-footer">
+              <div v-if="state.loader" class="modal-footer">
                 <slot name="footer">
                   <button @click="closeModal">Ok</button>
                 </slot>
@@ -22,7 +22,7 @@
 </template>
 
 <script>
-import { reactive } from '@vue/composition-api'
+import { reactive, computed } from '@vue/composition-api'
 export default {
     name: "Confirmation",
     props :{
@@ -33,26 +33,23 @@ export default {
         loaded: {
             type: Boolean, 
             required: true
+        },
+        message: {
+          type: String,
+          required: true
         }
     },
-    setup(props) {
+    setup(props, ctx) {
         const state = reactive({
-            modal: props.showModal,
-            loader: props.loaded
+            loader: computed(() => props.loaded)
         })
-        
-        function showModal(value) {
-            console.log(value)
-        }
-
         function closeModal() {
-            state.modal = !state.modal
+          ctx.emit('close-modal')
         }
 
         return {
             state,
             closeModal,
-            showModal
         }
     }
 
@@ -66,7 +63,7 @@ export default {
   top: 0;
   left: 0;
   width: 100%;
-  height: 100%;
+  height: 110%;
   background-color: rgba(0, 0, 0, 0.2);
   display: table;
   transition: opacity 0.3s ease;
