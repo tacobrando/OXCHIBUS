@@ -64,7 +64,7 @@
                 <option 
                   v-for="year in years" 
                   :key="year" 
-                  value="year"
+                  value="open_year"
                 >
                   {{year}}
                 </option>
@@ -79,7 +79,7 @@
                 <option 
                   v-for="year in years" 
                   :key="year" 
-                  value="year"
+                  value="close_year"
                 >
                   {{year}}
                 </option>
