@@ -6,7 +6,16 @@
               <div v-if="!state.loader" class="loader"></div>
               <div v-if="state.loader" class="modal-body fade-in">
                 <slot name="body">
-                    <h3>{{message}}</h3>
+                  
+                    <span class="material-icons fade-in slide-in-down">
+                      <svg class="checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
+                        <circle class="checkmark__circle" cx="26" cy="26" r="25" fill="none"/>
+                        <path class="checkmark__check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/>
+                      </svg>
+                      mail_outline
+                    </span>
+                    <p class="fade-in">{{message}}</p>
+                    <h3 class="fade-in">{{email}}</h3>
                 </slot>
               </div>
 
@@ -35,6 +44,10 @@ export default {
             required: true
         },
         message: {
+          type: String,
+          required: true
+        },
+        email: {
           type: String,
           required: true
         }
@@ -68,11 +81,25 @@ export default {
   display: table;
   transition: opacity 0.3s ease;
 }
-
+.modal-footer button {
+  width: 100px;
+  height: 30px;
+  font-size: 1rem;
+}
+.material-icons{
+  font-size: 5rem;
+}
 .modal-wrapper {
   display: table-cell;
   vertical-align: middle;
 }
+.fade-in {
+      opacity: 1;
+      animation-name: fadeInOpacity;
+      animation-iteration-count: 1;
+      animation-timing-function: ease-in;
+      animation-duration: 0.5s;
+  }
 @keyframes animatetop {
   from {top: -300px; opacity: 0}
   to {top: 0; opacity: 1}
@@ -86,6 +113,35 @@ export default {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
 }
+@-webkit-keyframes slideInDown {
+    0% {
+      transform: translateY(30px);
+    }
+    100% {
+      transform: translateY(0);
+    }
+  }
+  @-moz-keyframes slideInDown {
+    0% {
+      transform: translateY(30px);
+    }
+    100% {
+      transform: translateX(0);
+    }
+  }
+  @keyframes slideInDown {
+    0% {
+      transform: translateY(30px);
+    }
+    100% {
+      transform: translateY(0);
+    }
+  }
+  .slide-in-down {
+    -webkit-animation: slideInDown 1s forwards;
+    -moz-animation: slideInDown 1s forwards;
+    animation: slideInDown 1s forwards;
+  }
 .loader {
   display: flex;
   justify-content: center;
