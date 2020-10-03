@@ -8,7 +8,10 @@
       class="google-maps fade-in"
       map-type-id="terrain"
     >
-    <GmapCluster :zoomOnClick="true">
+    <GmapCluster 
+      :minimumClusterSize="3" 
+      :enableRetinaIcons="true" 
+      :zoomOnClick="true">
       <GmapMarker 
         v-for="(pos, index) in data" 
         :data="pos" 
