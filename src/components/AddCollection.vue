@@ -63,8 +63,7 @@
               >
                 <option 
                   v-for="year in years" 
-                  :key="year" 
-                  value="year"
+                  :key="year"
                 >
                   {{year}}
                 </option>
@@ -79,7 +78,6 @@
                 <option 
                   v-for="year in years" 
                   :key="year" 
-                  value="year"
                 >
                   {{year}}
                 </option>
@@ -103,6 +101,7 @@
       <Confirmation 
         @close-modal="closeModal"
         v-if="state.confirmed" 
+        :email="state.email"
         :loaded="state.loaded" 
         :message="state.message"
         :showModal="state.confirmed" 
@@ -173,7 +172,7 @@ export default {
       db.collection('unverified').add(details)
       .then(() => {
         console.log("Sent")
-        state.message = "Email has been Sent"
+        state.message = `Email has been Sent to`
         state.confirmed = !state.confirmed
         setTimeout(() => {
           state.loaded = !state.loaded
