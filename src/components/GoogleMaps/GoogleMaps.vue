@@ -8,21 +8,15 @@
       class="google-maps fade-in"
       map-type-id="terrain"
     >
-    <GmapCluster 
-      :minimumClusterSize="3" 
-      :enableRetinaIcons="true" 
-      :zoomOnClick="true">
-      <GmapMarker 
-        v-for="(pos, index) in data" 
-        :data="pos" 
-        :position="pos.position"
-        :clickable="true"
-        :draggable="false"
-        @click="infoBox(pos, index)"
-        :key="index" 
-        :index="index" />
-    </GmapCluster>
-      <GmapMarker v-if="state.showMark" :data="state.position" />
+    <GmapMarker 
+      v-for="(pos, index) in data" 
+      :data="pos" 
+      :position="pos.position"
+      :clickable="true"
+      :draggable="false"
+      @click="infoBox(pos, index)"
+      :key="index" 
+      :index="index" />
       <GmapInfoWindow 
         class="info-window"
         v-if="state.pos !== undefined"
@@ -86,11 +80,17 @@
               {{state.pos.imageCapFour}} 
             </p>
         </div>
-      </GmapInfoWindow>
-      
+      </GmapInfoWindow>   
     </GmapMap>
-    <ImageModal @toggle="imageModal('')" v-if="state.imageModal">
-      <img class="modal-img" :src="state.imgUrl" alt="">
+    <ImageModal 
+      @toggle="imageModal('')" 
+      v-if="state.imageModal"
+    >
+      <img 
+        class="modal-img" 
+        :src="state.imgUrl" 
+        alt=""
+      >
     </ImageModal>
   </div>
 </template>
@@ -98,7 +98,7 @@
 <script>
 import { reactive } from '@vue/composition-api'
 import mapStyles from './mapStyles.js'
-import ImageModal from './ImageModal'
+import ImageModal from '@/components/Modals/ImageModal'
 
 
 export default {

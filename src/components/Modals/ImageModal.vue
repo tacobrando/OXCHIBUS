@@ -4,7 +4,6 @@
           <div class="modal-wrapper">
             <div class="modal-container animate-top">
                 <slot>
-
                 </slot>
             </div>
           </div>
@@ -13,11 +12,7 @@
 </template>
 
 <script>
-// import { reactive, computed } from '@vue/composition-api'
 export default {
-    props: {
-
-    },
     name: "Modal",
     setup(props, ctx) {
         function toggleModal() {
@@ -75,16 +70,6 @@ export default {
 .modal-header h3 {
   margin-top: 0;
   color: #42b983;
-}
-
-.modal-body {
-  margin: 20px 0;
-
-  img{
-	width: 55%;
-	height: 200px;
-	border-radius: inherit;
-  }
 }
 
 .modal-default-button {
