@@ -12,5 +12,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-
+.add-comment{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 </style>

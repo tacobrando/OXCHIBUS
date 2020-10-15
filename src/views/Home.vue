@@ -21,6 +21,9 @@
       <AddCollection />
     </div>
     <div class="pageFive">
+      <AddComment />
+    </div>
+    <div class="pageSix">
       <Footer />
     </div>
   </div>
@@ -34,6 +37,7 @@ import About from '@/components/Layout/About.vue'
 import Team from '@/components/Layout/Team.vue'
 import AddCollection from '@/components/Layout/AddCollection.vue'
 import Footer from '@/components/Layout/Footer.vue'
+import AddComment from '@/components/Layout/AddComment'
 import {onMounted, reactive} from '@vue/composition-api'
 import db from '@/utils/firebase'
 
@@ -45,7 +49,8 @@ export default {
     About,
     AddCollection,
     Footer,
-    Team
+    Team,
+    AddComment
   },
   setup() {
     const state = reactive({
@@ -87,6 +92,11 @@ export default {
   height: 100%;
 }
 .pageFive{
+  display: flex;
+  width: 100%;
+  height: 100%;
+}
+.pageSix{
   display: flex;
   width: 100%;
   height: 100%;
