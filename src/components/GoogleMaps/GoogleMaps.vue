@@ -80,11 +80,17 @@
               {{state.pos.imageCapFour}} 
             </p>
         </div>
-      </GmapInfoWindow>
-      
+      </GmapInfoWindow>   
     </GmapMap>
-    <ImageModal @toggle="imageModal('')" v-if="state.imageModal">
-      <img class="modal-img" :src="state.imgUrl" alt="">
+    <ImageModal 
+      @toggle="imageModal('')" 
+      v-if="state.imageModal"
+    >
+      <img 
+        class="modal-img" 
+        :src="state.imgUrl" 
+        alt=""
+      >
     </ImageModal>
   </div>
 </template>
@@ -92,7 +98,7 @@
 <script>
 import { reactive } from '@vue/composition-api'
 import mapStyles from './mapStyles.js'
-import ImageModal from './ImageModal'
+import ImageModal from '@/components/Modals/ImageModal'
 
 
 export default {

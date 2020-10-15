@@ -111,9 +111,9 @@
 
 <script>
 import { computed, reactive } from '@vue/composition-api'
-import GoogleMaps from './GoogleMaps/GoogleMaps'
-import AutoComplete from './GoogleMaps/AutoComplete'
-import Confirmation from './Confirmation'
+import GoogleMaps from '@/components/GoogleMaps/GoogleMaps'
+import AutoComplete from '@/components/GoogleMaps/AutoComplete'
+import Confirmation from '@/components/Modals/Confirmation'
 
 import db from '@/utils/firebase'
 
