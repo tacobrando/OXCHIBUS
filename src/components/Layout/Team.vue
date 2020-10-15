@@ -66,7 +66,7 @@
 </template>
 
 <script>
-import Modal from './Modal'
+import Modal from '@/components/Modals/Modal'
 import {reactive} from '@vue/composition-api'
 export default {
     components: { Modal },

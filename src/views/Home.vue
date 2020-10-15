@@ -2,7 +2,11 @@
   <div class="home">
     <div class="pageOne">
       <Welcome />
-      <GoogleMaps class="map" :showInput="false" :data="state.mapData" />
+      <GoogleMaps 
+        class="map" 
+        :showInput="false" 
+        :data="state.mapData"
+      />
     </div>
     <div class="pageTwo">
       <h1>About</h1>
@@ -25,11 +29,11 @@
 <script>
 // @ is an alias to /src
 import GoogleMaps from '@/components/GoogleMaps/GoogleMaps.vue'
-import Welcome from '@/components/Welcome.vue'
-import About from '@/components/About.vue'
-import Team from '@/components/Team.vue'
-import AddCollection from '@/components/AddCollection.vue'
-import Footer from '@/components/Footer.vue'
+import Welcome from '@/components/Layout/Welcome.vue'
+import About from '@/components/Layout/About.vue'
+import Team from '@/components/Layout/Team.vue'
+import AddCollection from '@/components/Layout/AddCollection.vue'
+import Footer from '@/components/Layout/Footer.vue'
 import {onMounted, reactive} from '@vue/composition-api'
 import db from '@/utils/firebase'
 
