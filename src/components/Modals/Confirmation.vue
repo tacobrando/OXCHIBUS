@@ -21,7 +21,7 @@
 
               <div v-if="state.loader" class="modal-footer">
                 <slot name="footer">
-                  <button @click="closeModal">Ok</button>
+                  <button @click="closeModal">OK</button>
                 </slot>
               </div>
             </div>
@@ -92,6 +92,18 @@ export default {
 .modal-wrapper {
   display: table-cell;
   vertical-align: middle;
+}
+button{
+  border-radius: 5px;
+  margin: 0;
+  border: 1px solid #dcdfe6;
+  color: #606266;
+  background-color: white;
+  transition: 0.3s;
+
+  &:hover{
+    background: rgb(221, 221, 221)
+  }
 }
 .fade-in {
       opacity: 1;

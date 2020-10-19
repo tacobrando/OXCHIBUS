@@ -1,5 +1,5 @@
 <template>
-  <div class="comment">
+  <div class="comment slide-in-up">
     <div class="container">
       <div class="user-details">
         <h4>{{ comment.name }}</h4>
@@ -30,7 +30,8 @@ export default {
 <style scoped lang="scss">
 .comment {
   display: flex;
-  border: 1px solid black;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  border-radius: 5px;
   margin: 5px;
   width: 50%;
 
@@ -43,11 +44,17 @@ export default {
 
     .user-details {
       display: flex;
+      align-items: center;
+      
+      p {
+        font-size: 0.8rem;
+      }
     }
     
     p, h4{
       margin: 5px;
     }
+
   }
 }
 

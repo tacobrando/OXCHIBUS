@@ -94,6 +94,7 @@
           <GoogleMaps 
             :showInput="true" 
             :data="state.data" 
+            :showInfo="false"
           />
         </div>
         <button>SUBMIT</button>
