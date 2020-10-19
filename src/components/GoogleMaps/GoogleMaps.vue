@@ -17,70 +17,72 @@
       @click="infoBox(pos, index)"
       :key="index" 
       :index="index" />
-      <GmapInfoWindow 
-        class="info-window"
-        v-if="state.pos !== undefined"
-        :options="state.infoOptions" 
-        :position="state.infoWindowPos" 
-        :opened="state.infoWinOpen"
-        @closeclick="state.infoWinOpen=false"
-      >
-        <span @click="infoBox" class="close-btn">
-          <h3 style="margin: 0; font-weight: 500">X</h3>
-        </span>
-        <div class="info">
-            <h3>{{state.pos.business_name}}</h3>
-            <p v-if="state.pos.close_year">{{state.pos.open_year}} - {{state.pos.close_year}}</p>
-            <p v-else>{{state.pos.open_year}}</p>
-            <p>{{state.pos.address}}</p>
-            <p>Owner: {{state.pos.owner}}</p>
-            <p>{{state.pos.description}}</p>
-            <img 
-              v-if="state.pos.imageUrl" 
-              :src="state.pos.imageUrl" 
-              @click="imageModal(state.pos.imageUrl)"
-            />
-            <p 
-              v-if="state.pos.imageCapOne && state.pos.imageUrl"
-            > 
-              {{state.pos.imageCapOne}} 
-            </p>
-            <img 
-              v-if="state.pos.imageUrlTwo" 
-              class="businessImage" 
-              :src="state.pos.imageUrlTwo" 
-              @click="imageModal(state.pos.imageUrlTwo)"
-            />
-            <p 
-              v-if="state.pos.imageCapTwo && state.pos.imageUrlTwo"
-            > 
-              {{state.pos.imageCapTwo}} 
-            </p>
-            <img 
-              v-if="state.pos.imageUrlThree"
-              class="businessImage" 
-              :src="state.pos.imageUrlThree" 
-              @click="imageModal(state.pos.imageUrlThree)"
+      <div v-if="showInfo">
+        <GmapInfoWindow 
+          class="info-window"
+          v-if="state.pos !== undefined"
+          :options="state.infoOptions" 
+          :position="state.infoWindowPos" 
+          :opened="state.infoWinOpen"
+          @closeclick="state.infoWinOpen=false"
+        >
+          <span @click="infoBox" class="close-btn">
+            <h3 style="margin: 0; font-weight: 500">X</h3>
+          </span>
+          <div class="info">
+              <h3>{{state.pos.business_name}}</h3>
+              <p v-if="state.pos.close_year">{{state.pos.open_year}} - {{state.pos.close_year}}</p>
+              <p v-else>{{state.pos.open_year}}</p>
+              <p>{{state.pos.address}}</p>
+              <p>Owner: {{state.pos.owner}}</p>
+              <p>{{state.pos.description}}</p>
+              <img 
+                v-if="state.pos.imageUrl" 
+                :src="state.pos.imageUrl" 
+                @click="imageModal(state.pos.imageUrl)"
+              />
+              <p 
+                v-if="state.pos.imageCapOne && state.pos.imageUrl"
+              > 
+                {{state.pos.imageCapOne}} 
+              </p>
+              <img 
+                v-if="state.pos.imageUrlTwo" 
+                class="businessImage" 
+                :src="state.pos.imageUrlTwo" 
+                @click="imageModal(state.pos.imageUrlTwo)"
+              />
+              <p 
+                v-if="state.pos.imageCapTwo && state.pos.imageUrlTwo"
+              > 
+                {{state.pos.imageCapTwo}} 
+              </p>
+              <img 
+                v-if="state.pos.imageUrlThree"
+                class="businessImage" 
+                :src="state.pos.imageUrlThree" 
+                @click="imageModal(state.pos.imageUrlThree)"
 
-            />
-            <p 
-              v-if="state.pos.imageCapThree && state.pos.imageUrlThree"
-            > 
-              {{state.pos.imageCapThree}} 
-            </p>
-            <img 
-              v-if="state.pos.imageUrlFour" 
-              class="businessImage" 
-              :src="state.pos.imageUrlFour" 
-              @click="imageModal(state.pos.imageUrlFour)"
-            />
-            <p 
-              v-if="state.pos.imageCapFour && state.pos.imageUrlFour"
-            > 
-              {{state.pos.imageCapFour}} 
-            </p>
-        </div>
-      </GmapInfoWindow>   
+              />
+              <p 
+                v-if="state.pos.imageCapThree && state.pos.imageUrlThree"
+              > 
+                {{state.pos.imageCapThree}} 
+              </p>
+              <img 
+                v-if="state.pos.imageUrlFour" 
+                class="businessImage" 
+                :src="state.pos.imageUrlFour" 
+                @click="imageModal(state.pos.imageUrlFour)"
+              />
+              <p 
+                v-if="state.pos.imageCapFour && state.pos.imageUrlFour"
+              > 
+                {{state.pos.imageCapFour}} 
+              </p>
+          </div>
+        </GmapInfoWindow>  
+      </div> 
     </GmapMap>
     <ImageModal 
       @toggle="imageModal('')" 
@@ -108,11 +110,15 @@ export default {
     
   },
   props: {
-    data:{
+    data: {
       type: Array,
       required: false
     },
-    showInput:{
+    showInput: {
+      type: Boolean,
+      required: true
+    },
+    showInfo: {
       type: Boolean,
       required: true
     }

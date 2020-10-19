@@ -4,14 +4,14 @@
     <form method="post" @submit.prevent="addComment">
       <div class="username">
         <p>Name</p>
-        <input type="text" v-model="state.username">
+        <input required type="text" v-model="state.username">
       </div>
       <div class="comment-box">
         <p>Comment</p>
-        <textarea placeholder="Write a comment...." v-model="state.comment" rows="4" cols="40" />
+        <textarea required placeholder="Write a comment...." v-model="state.comment" rows="4" cols="40" />
       </div>
       <div class="submit-btn">
-        <button>Submit</button>
+        <button>SUBMIT</button>
       </div>
     </form>
   </div>
@@ -30,11 +30,13 @@ export default {
 
     function addComment() {
       if(state.comment !== '' && state.username !== '') {
-        let today = new Date();
-        const dd = String(today.getDate()).padStart(2, '0');
-        const mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
-        const yyyy = today.getFullYear();
-        today = mm + '/' + dd + '/' + yyyy;
+        const time = new Date().toLocaleString('en-GB', {
+          hour: 'numeric', 
+          minute: 'numeric', 
+          hour12: true
+        })
+        const date = new Date().toLocaleDateString()
+        const today = `${date}, ${time}`
 
         ctx.emit('addComment', {
           name: state.username,
@@ -58,6 +60,14 @@ export default {
   display: flex;
   flex-direction: column;
 
+  p {
+    margin: 10px;
+  }
+
+  h1 {
+    margin-bottom: 10px;
+  }
+
   .username {
     margin: 5px;
 
@@ -67,10 +77,6 @@ export default {
         padding: 10px;
         width: 250px;
       }
-
-    p {
-      margin: 2px;
-    }
   }
   .comment-box{
     textarea{
@@ -78,6 +84,22 @@ export default {
       border-radius: 5px;
       padding: 10px;
       width: 300px;
+    }
+  }
+  .submit-btn {
+    button{
+      margin-top: 5px;
+      width: 150px;
+      border-radius: 5px;
+      height: 37px;
+      border: 1px solid #dcdfe6;
+      color: #606266;
+      background-color: white;
+      transition: 0.3s;
+
+      &:hover{
+        background: rgb(221, 221, 221)
+      }
     }
   }
 }

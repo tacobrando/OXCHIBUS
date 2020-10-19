@@ -125,7 +125,14 @@
       box-shadow: inset 0px 0px 0px 30px #7ac142;
     }
   }
-  
+  @keyframes slideInDown {
+    0% {
+      transform: translateY(-900px);
+    }
+    100% {
+      transform: translateY(0);
+    }
+  }
   @-webkit-keyframes slideInDown {
     0% {
       transform: translateY(-900px);
@@ -142,11 +149,43 @@
       transform: translateX(0);
     }
   }
-  @keyframes slideInDown {
+  @keyframes slideInUp {
     0% {
-      transform: translateY(-900px);
+      opacity: 0;
+      transform: translateY(200px);
     }
     100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  @-webkit-keyframes slideInUp {
+    0% {
+      opacity: 0;
+      transform: translateY(200px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  @-moz-keyframes slideInUp {
+    0% {
+      opacity: 0;
+      transform: translateY(200px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+  @keyframes slideInUp {
+    0% {
+      opacity: 0;
+      transform: translateY(100px);
+    }
+    100% {
+      opacity: 1;
       transform: translateY(0);
     }
   }
@@ -155,7 +194,11 @@
     -moz-animation: slideInDown 2s forwards;
     animation: slideInDown 2s forwards;
   }
-  
+  .slide-in-up {
+    -webkit-animation: slideInUp 0.5s forwards;
+    -moz-animation: slideInUp 0.5s forwards;
+    animation: slideInUp 0.5s forwards;
+  }
   .slide-in-right {
     -webkit-animation: slideInRight 2s forwards;
     -moz-animation: slideInRight 2s forwards;

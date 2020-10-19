@@ -6,6 +6,7 @@
         class="map" 
         :showInput="false" 
         :data="state.mapData"
+        :showInfo="true"
       />
     </div>
     <div class="pageTwo">
@@ -24,7 +25,11 @@
       <AddComment @addComment.passive="setComment" />
     </div>
     <div class="pageSix">
+      <h4>Comments: </h4>
       <Comment v-for="comment in filteredList" :key="comment.id" :comment="comment" />
+      <p v-if="state.comments.length == 0">
+        No comments have been posted yet
+      </p>
     </div>
     <div class="pageSeven">
       <Footer />
@@ -60,44 +65,7 @@ export default {
   setup() {
     const state = reactive({
       mapData: [],
-      comments: [
-        { 
-          id: 1,
-          name: 'user1',
-          date: '21/0/12',
-          content: 'Very good'
-        },
-        {
-          id: 2,
-          name: 'user2',
-          date: '21/0/12',
-          content: 'This is a test comment'
-        },
-        {
-          id: 3,
-          name: 'user3',
-          date: '21/0/12',
-          content: 'Hello'
-        },
-        {
-          id: 4,
-          name: 'user4',
-          date: '21/0/12',
-          content: 'Lol'
-        },
-        {
-          id: 5,
-          name: 'user5',
-          date: '21/0/12',
-          content: 'I love it'
-        },
-        {
-          id: 6,
-          name: 'user6',
-          date: '21/0/12',
-          content: 'This is the best'
-        }
-      ]
+      comments: []
     })
 
     const filteredList = computed(() => state.comments.slice().reverse())
@@ -106,15 +74,24 @@ export default {
       const id = state.comments.length + 1
       data.id = id
       state.comments.push(data)
+
+      db.collection('comments').add(data)
     }
     onMounted(() => {
-          db.collection('businesses').get().then(item => {
-            item.forEach(doc => {
-              let data = doc.data()
-              state.mapData.push({ position: data })
-            })
-          })
+      db.collection('businesses').get().then(item => {
+        item.forEach(doc => {
+          let data = doc.data()
+          state.mapData.push({ position: data })
         })
+      })
+
+      db.collection('comments').get().then(item => {
+        item.forEach(doc => {
+          let data = doc.data()
+          state.comments.push(data)
+        })
+      })
+    })
     return {
       state,
       setComment,
@@ -145,6 +122,7 @@ export default {
   height: 100%;
 }
 .pageFive{
+  margin-top: 5%;
   width: 100%;
   height: 100%;
 }

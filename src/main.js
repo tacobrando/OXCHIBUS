@@ -3,10 +3,7 @@ import App from './App.vue'
 import router from './router'
 import VueCompositionAPI from '@vue/composition-api'
 import * as VueGoogleMaps from 'vue2-google-maps'
-import GmapCluster from "vue2-google-maps/dist/components/cluster";
-import './registerServiceWorker'
 
-Vue.component('GmapCluster', GmapCluster);
 Vue.use(VueCompositionAPI)
 
 Vue.use(VueGoogleMaps, {
