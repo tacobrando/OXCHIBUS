@@ -15,11 +15,11 @@
         <span v-else @click="cancel">
           <p>Cancel</p>
         </span>
-        <span v-if="!state.showReply" @click="showReplies">
-          <p>Show replies ({{ comment.replies.length }})</p>
-        </span>
-        <span v-else @click="showReplies">
+        <span v-if="state.showReply && comment.replies.length > 0" @click="showReplies">
           <p>Hide replies ({{ comment.replies.length }})</p>
+        </span>
+        <span id="show-btn" v-else @click="showReplies">
+          <p>Show replies ({{ comment.replies.length }})</p>
         </span>
       </div>
       <div v-if="state.replyBox" id="reply-box" class="fade-in">
@@ -81,7 +81,7 @@ export default {
         replyMsg: '',
         robot: false,
       },
-      showReply: true,
+      showReply: false,
       siteKey: process.env.VUE_APP_RECAPTCHA_KEY,
       replyBox: false,
       charCount: computed(() => state.form.replyMsg.length),
