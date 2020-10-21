@@ -1,14 +1,22 @@
 <template>
   <div class="add-comment">
-    <h1>Leave a comment</h1>
-    <form method="post" @submit.prevent="addComment">
+    <form method="post" id="comment-form" @submit.prevent="addComment">
       <div class="username">
         <p>Name</p>
-        <input required type="text" v-model="state.username">
+        <input required type="text" v-model="state.form.username">
       </div>
       <div class="comment-box">
         <p>Comment</p>
-        <textarea required placeholder="Write a comment...." v-model="state.comment" rows="4" cols="40" />
+        <textarea required placeholder="Write a comment...." v-model="state.form.comment" rows="4" cols="40" />
+      </div>
+      <div class="captcha">
+        <p>Robot Check</p>
+        <VueRecaptcha 
+          ref="recaptcha" 
+          @verify="onVerify"
+          :sitekey="state.siteKey"
+        >
+        </VueRecaptcha>
       </div>
       <div class="submit-btn">
         <button>SUBMIT</button>
@@ -19,17 +27,23 @@
 
 <script>
 import { reactive } from '@vue/composition-api'
+import VueRecaptcha from 'vue-recaptcha'
 
 export default {
   name: "AddComment",
+  components: { VueRecaptcha },
   setup(props, ctx) {
     const state = reactive({
-      comment: '',
-      username: ''
+      form: {
+        username: '',
+        comment: '',
+        robot: false
+      },
+      siteKey: process.env.VUE_APP_RECAPTCHA_KEY
     })
 
     function addComment() {
-      if(state.comment !== '' && state.username !== '') {
+      if(state.form.robot) {
         const time = new Date().toLocaleString('en-GB', {
           hour: 'numeric', 
           minute: 'numeric', 
@@ -37,18 +51,28 @@ export default {
         })
         const date = new Date().toLocaleDateString()
         const today = `${date}, ${time}`
+        const timestamp = new Date().getTime();
 
         ctx.emit('addComment', {
-          name: state.username,
-          content: state.comment,
-          date: today
+          name: state.form.username,
+          content: state.form.comment,
+          replies: [],
+          date: today,
+          timestamp: timestamp
         })
+
+        state.form.robot = false
       }
+    }
+
+    function onVerify(response) {
+      if (response) state.form.robot = true
     }
 
     return {
       state,
-      addComment
+      addComment,
+      onVerify
     }
   }
 
@@ -86,9 +110,15 @@ export default {
       width: 300px;
     }
   }
+  .captcha{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center
+  }
   .submit-btn {
     button{
-      margin-top: 5px;
+      margin-top: 20px;
       width: 150px;
       border-radius: 5px;
       height: 37px;

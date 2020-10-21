@@ -16,7 +16,7 @@
           <div class="input">
             <p>Name</p>
             <input 
-              v-model="state.name" 
+              v-model="state.form.name" 
               required 
               type="text" 
               id="name"
@@ -25,7 +25,7 @@
           <div class="input">
             <p>Email</p>
             <input 
-              v-model="state.email" 
+              v-model="state.form.email" 
               required 
               type="email" 
               id="email"
@@ -36,7 +36,7 @@
           <div class="input">
             <p>Name of Business</p>
             <input 
-              v-model="state.business_name" 
+              v-model="state.form.business_name" 
               required 
               id="business_name" 
               type="text"
@@ -45,7 +45,7 @@
           <div class="input">
             <p>Owner</p>
             <input 
-              v-model="state.owner" 
+              v-model="state.form.owner" 
               id="owner" 
               required 
               type="text"
@@ -57,7 +57,7 @@
             <div class="option">
               <p>Year of opening</p>
               <select 
-                v-model="state.open_year" 
+                v-model="state.form.open_year" 
                 required 
                 id="open_year"
               >
@@ -72,8 +72,8 @@
             <div class="option">
               <p>Year of closing(optional)</p>
               <select 
-                v-model="state.close_year" 
-                id="open_year"
+                v-model="state.form.close_year" 
+                id="close_year"
               >
                 <option 
                   v-for="year in years" 
@@ -93,16 +93,24 @@
           />
           <GoogleMaps 
             :showInput="true" 
-            :data="state.data" 
+            :data="state.form.data" 
             :showInfo="false"
           />
         </div>
+        <p>Robot Check</p>
+        <VueRecaptcha
+          required 
+          ref="recaptcha" 
+          @verify="onVerify"
+          :sitekey="state.siteKey"
+        >
+        </VueRecaptcha>
         <button>SUBMIT</button>
       </form>
       <Confirmation 
         @close-modal="closeModal"
         v-if="state.confirmed" 
-        :email="state.email"
+        :email="state.form.email"
         :loaded="state.loaded" 
         :message="state.message"
         :showModal="state.confirmed" 
@@ -115,30 +123,35 @@ import { computed, reactive } from '@vue/composition-api'
 import GoogleMaps from '@/components/GoogleMaps/GoogleMaps'
 import AutoComplete from '@/components/GoogleMaps/AutoComplete'
 import Confirmation from '@/components/Modals/Confirmation'
+import VueRecaptcha from 'vue-recaptcha'
 
 import db from '@/utils/firebase'
 
 export default {
-  components: { GoogleMaps, AutoComplete, Confirmation },
+  components: { GoogleMaps, AutoComplete, Confirmation, VueRecaptcha },
   setup() {
     const state = reactive({
+      form: {
+        name: '',
+        email: '',
+        business_name: '',
+        owner: '',
+        address: '',
+        data: [],
+        open_year: 0,
+        close_year: 0,
+        robot: false
+      },
       message: '',
-      data: [],
       selected: '',
-      name: '',
-      email: '',
-      business_name: '',
-      owner: '',
-      address: '',
       lat: 0,
       lng: 0,
-      open_year: 0,
-      close_year: 0,
       confirmed: false,
       loaded: false,
       infoWindowPos: null,
       infoWinOpen: false,
       currentMidx: null,
+      siteKey: process.env.VUE_APP_RECAPTCHA_KEY
     })
 
     const years = computed(() => {
@@ -151,37 +164,43 @@ export default {
     }
 
     function setInfo(data) {
-      state.data = []
-      state.address = data.address
+      state.form.data = []
+      state.form.address = data.address
       state.lat = data.lat
       state.lng = data.lng
-      state.data.push({ position: data })
+      state.form.data.push({ position: data })
+    }
+    function onVerify(response) {
+      if (response) state.form.robot = true
     }
 
     function addBusiness() {
-      let details = {
-        name: state.name,
-        email: state.email,
-        business_name: state.business_name,
-        owner: state.owner,
-        open_year: state.open_year,
-        close_year: state.close_year,
-        lat: state.lat,
-        lng:state.lng,
-        address: state.address
+      if(state.form.robot) {
+        let details = {
+          name: state.form.name,
+          email: state.form.email,
+          business_name: state.form.business_name,
+          owner: state.form.owner,
+          open_year: state.form.open_year,
+          close_year: state.form.close_year,
+          lat: state.lat,
+          lng:state.lng,
+          address: state.form.address
+        }
+        db.collection('unverified').add(details)
+        .then(() => {
+          console.log("Sent")
+          state.message = `Email has been Sent to`
+          state.confirmed = !state.confirmed
+          setTimeout(() => {
+            state.loaded = !state.loaded
+          }, 2000)
+          state.form.robot = false
+        }).catch((err) => {
+          console.log(err)
+          state.message = "Error, Please try again"
+        })
       }
-      db.collection('unverified').add(details)
-      .then(() => {
-        console.log("Sent")
-        state.message = `Email has been Sent to`
-        state.confirmed = !state.confirmed
-        setTimeout(() => {
-          state.loaded = !state.loaded
-        }, 2000)
-      }).catch((err) => {
-        console.log(err)
-        state.message = "Error, Please try again"
-      })
     }
 
     return {
@@ -189,7 +208,8 @@ export default {
       years,
       setInfo,
       addBusiness,
-      closeModal
+      closeModal,
+      onVerify
     }
   }
 }
