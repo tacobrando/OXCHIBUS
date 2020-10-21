@@ -244,4 +244,9 @@ export default {
     width: 90%
   }
 }
+@media only screen and (max-width: 400px) {
+  .comment {
+    width: 100%
+  }
+}
 </style>
