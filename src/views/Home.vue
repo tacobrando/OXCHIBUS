@@ -22,11 +22,18 @@
       <AddCollection />
     </div>
     <div class="pageFive">
+      <h1>Leave a comment</h1>
       <AddComment @addComment.passive="setComment" />
     </div>
     <div class="pageSix">
       <h4>Comments: </h4>
-      <Comment v-for="comment in filteredList" :key="comment.id" :comment="comment" />
+      <Comment 
+        v-for="comment in filteredList" 
+        :key="comment.id"
+        :id="comment.id"
+        :comment="comment" 
+        @reply="addReply"
+      />
       <p v-if="state.comments.length == 0">
         No comments have been posted yet
       </p>
@@ -45,10 +52,11 @@ import About from '@/components/Layout/About.vue'
 import Team from '@/components/Layout/Team.vue'
 import AddCollection from '@/components/Layout/AddCollection.vue'
 import Footer from '@/components/Layout/Footer.vue'
-import AddComment from '@/components/Layout/AddComment'
+import AddComment from '@/components/Comment/AddComment'
 import Comment from '@/components/Layout/Comment'
 import { onMounted, reactive, computed } from '@vue/composition-api'
 import db from '@/utils/firebase'
+import * as firebase from 'firebase/app';
 
 export default {
   name: 'Home',
@@ -65,17 +73,47 @@ export default {
   setup() {
     const state = reactive({
       mapData: [],
-      comments: []
+      docId: '',
+      comments: [
+        // {
+        //   id: 2,
+        //   name: 'Test',
+        //   date: '09/10/2020',
+        //   content: 'This is a test comment',
+        //   replies: [
+        //     {
+        //       id: 1,
+        //       name: 'Test2',
+        //       date: '09/10/2020',
+        //       content: 'This is a comment reply',
+        //     }
+        //   ]
+        // }
+      ]
     })
 
     const filteredList = computed(() => state.comments.slice().reverse())
 
     function setComment(data) {
-      const id = state.comments.length + 1
-      data.id = id
+      data.id = state.comments.length + 1
       state.comments.push(data)
 
-      db.collection('comments').add(data)
+      db.collection('comments').add(data).then((ref) => {
+        db.collection('comments').doc(ref.id).update({ docId: ref.id })
+      })
+    }
+    
+    function addReply(data) {
+        for(let i in state.comments) {
+          if(data.parentId == state.comments[i].docId) {
+            data.id = state.comments[i].replies.length + 1
+            state.comments[i].replies.unshift(data)
+            const doc = db.collection('comments').doc(state.comments[i].docId)
+            doc.update({
+              replies: firebase.firestore.FieldValue.arrayUnion(data)
+            })
+          }
+        }
     }
     onMounted(() => {
       db.collection('businesses').get().then(item => {
@@ -84,9 +122,9 @@ export default {
           state.mapData.push({ position: data })
         })
       })
-
       db.collection('comments').get().then(item => {
         item.forEach(doc => {
+          state.docId = doc.id
           let data = doc.data()
           state.comments.push(data)
         })
@@ -95,6 +133,7 @@ export default {
     return {
       state,
       setComment,
+      addReply,
       filteredList
     }
   }
