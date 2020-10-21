@@ -12,8 +12,14 @@
         <span v-if="!state.replyBox" @click="reply">
           <p>Reply</p>
         </span>
-        <span v-if="state.replyBox" @click="cancel">
+        <span v-else @click="cancel">
           <p>Cancel</p>
+        </span>
+        <span v-if="!state.showReply" @click="showReplies">
+          <p>Show replies ({{ comment.replies.length }})</p>
+        </span>
+        <span v-else @click="showReplies">
+          <p>Hide replies ({{ comment.replies.length }})</p>
         </span>
       </div>
       <div v-if="state.replyBox" id="reply-box" class="fade-in">
@@ -39,7 +45,7 @@
           <button>Submit</button>
         </form>
       </div>
-      <div class="replies">
+      <div v-if="state.showReply" class="replies">
         <Reply 
           v-for="reply in comment.replies" 
           :reply="reply"
@@ -73,8 +79,9 @@ export default {
       form: {
         name: '',
         replyMsg: '',
-        robot: false
+        robot: false,
       },
+      showReply: true,
       siteKey: process.env.VUE_APP_RECAPTCHA_KEY,
       replyBox: false,
       charCount: computed(() => state.form.replyMsg.length),
@@ -85,6 +92,10 @@ export default {
     }
     function onVerify(response) {
       if (response) state.form.robot = true
+    }
+
+    function showReplies() {
+      state.showReply = !state.showReply
     }
 
     function cancel() {
@@ -126,7 +137,8 @@ export default {
       cancel,
       state,
       replyComment,
-      onVerify
+      onVerify,
+      showReplies
     }
   }
 }
@@ -241,12 +253,25 @@ export default {
 }
 @media only screen and (max-width: 800px) {
   .comment {
-    width: 90%
+    width: 90%;
+
+    .container{
+      .reply-box {
+        width: 83%
+      }
+    }
   }
 }
 @media only screen and (max-width: 400px) {
   .comment {
-    width: 100%
+    width: 98%;
+
+    .container{
+      .reply-box{
+        width: 83%
+      }
+    }
   }
+
 }
 </style>
